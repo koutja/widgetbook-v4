@@ -26,6 +26,14 @@ dependencies:
   nested: ^1.0.0
   path: ^1.8.0
   resizable_widget: ^1.0.5
+  # To create custom AddonConfig(s) that use types from
+  # the widgetbook package, we need to depend on the
+  # annotation package.
+  widgetbook_annotation:
+    git:
+      url: https://github.com/koutja/widgetbook-v4
+      path: packages/widgetbook_annotation
+      ref: v4
 
 dev_dependencies:
   flutter_test:
