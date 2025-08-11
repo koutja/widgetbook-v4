@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:build/build.dart';
 import 'package:code_builder/code_builder.dart';
@@ -16,13 +16,13 @@ class StoryGenerator extends Generator {
     BuildStep buildStep,
   ) async {
     final storiesVariables = library.allElements
-        .whereType<TopLevelVariableElement>()
-        .where((element) => element.name.startsWith('\$'))
+        .whereType<TopLevelVariableElement2>()
+        .where((element) => element.displayName.startsWith('\$'))
         .toList();
 
     final metaVariable = library.allElements
-        .whereType<TopLevelVariableElement>()
-        .firstWhere((element) => element.name == 'meta');
+        .whereType<TopLevelVariableElement2>()
+        .firstWhere((element) => element.displayName == 'meta');
 
     final metaType = metaVariable.type as InterfaceType;
     final widgetType = metaType.typeArguments.first;
@@ -30,12 +30,12 @@ class StoryGenerator extends Generator {
     final path = buildStep.inputId.path;
 
     final hasSetup = library.allElements
-        .whereType<FunctionElement>()
-        .any((element) => element.name == '\$setup');
+        .whereType<LocalFunctionElement>()
+        .any((element) => element.displayName == '\$setup');
 
     final hasArgsBuilder = library.allElements
-        .whereType<FunctionElement>()
-        .any((element) => element.name == '\$argsBuilder');
+        .whereType<LocalFunctionElement>()
+        .any((element) => element.displayName == '\$argsBuilder');
 
     final genLib = Library(
       (b) => b

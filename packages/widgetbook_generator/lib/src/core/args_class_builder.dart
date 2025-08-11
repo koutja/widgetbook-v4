@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:code_builder/code_builder.dart';
 
@@ -11,8 +12,8 @@ class ArgsClassBuilder {
   final DartType widgetType;
   final DartType argsType;
 
-  Iterable<ParameterElement> get params {
-    return (argsType.element as ClassElement).constructors.first.parameters;
+  Iterable<FormalParameterElement> get params {
+    return (argsType.element3 as ClassElement2).constructors2.first.formalParameters;
   }
 
   Set<Reference> getTypeParams({bool withBounds = true}) {
@@ -54,14 +55,14 @@ class ArgsClassBuilder {
               ..initializers.addAll(
                 params.map(
                   (param) => refer('this')
-                      .property(param.name)
+                      .property(param.displayName)
                       .assign(
-                        refer(param.name)
+                        refer(param.displayName)
                             .maybeProperty(
                           'init',
                           nullSafe: param.type.isNullable,
                         )
-                            .call([], {'name': literalString(param.name)}),
+                            .call([], {'name': literalString(param.displayName)}),
                       )
                       .code,
                 ),
@@ -78,21 +79,21 @@ class ArgsClassBuilder {
               ..initializers.addAll(
                 params.map(
                   (param) => refer('this')
-                      .property(param.name)
+                      .property(param.displayName)
                       .assign(
                         param.type.isNullable
-                            ? refer(param.name)
+                            ? refer(param.displayName)
                                 .equalTo(literalNull)
                                 .conditional(
                                   literalNull,
                                   InvokeExpression.newOf(
                                     refer('Arg.fixed'),
-                                    [refer(param.name)],
+                                    [refer(param.displayName)],
                                   ),
                                 )
                             : InvokeExpression.newOf(
                                 refer('Arg.fixed'),
-                                [refer(param.name)],
+                                [refer(param.displayName)],
                               ),
                       )
                       .code,
@@ -120,7 +121,7 @@ class ArgsClassBuilder {
               ..lambda = true
               ..body = literalList(
                 params.map(
-                  (param) => refer(param.name),
+                  (param) => refer(param.displayName),
                 ),
               ).code,
           ),

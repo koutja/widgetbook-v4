@@ -9,14 +9,10 @@ final meta = Meta<CustomButton>();
 
 final $Green = CustomButtonStory(
   name: 'Default',
-  args: CustomButtonArgs(
-    color: Arg.fixed(Colors.green),
-  ),
+  args: CustomButtonArgs(color: const ColorArg(Colors.blue)),
 );
 
 final $Red = CustomButtonStory(
   name: 'Default',
-  args: CustomButtonArgs(
-    color: Arg.fixed(Colors.red),
-  ),
+  args: CustomButtonArgs(color: const ColorArg(Colors.blue)),
 );

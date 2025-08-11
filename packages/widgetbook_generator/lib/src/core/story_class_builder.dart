@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:collection/collection.dart';
@@ -18,8 +18,8 @@ class StoryClassBuilder {
   final bool hasSetup;
   final bool hasArgsBuilder;
 
-  Iterable<ParameterElement> get params {
-    return (argsType.element as ClassElement).constructors.first.parameters;
+  Iterable<FormalParameterElement> get params {
+    return (argsType.element3 as ClassElement2).constructors2.first.formalParameters;
   }
 
   Set<Reference> getTypeParams({bool withBounds = true}) {
@@ -31,7 +31,7 @@ class StoryClassBuilder {
 
   Class build() {
     final isCustomArgs = widgetType != argsType;
-    final hasRequiredArgs = params.any((param) => param.requiresArg);
+    final hasRequiredArgs = params.any((param) => param.isRequired);
     final unboundedTypeParams = getTypeParams(withBounds: false);
 
     final widgetClassRef = widgetType.getRef();
@@ -129,7 +129,7 @@ class StoryClassBuilder {
                         ])
                         ..body = instantiate(
                           (param) => refer('args') //
-                              .property(param.name)
+                              .property(param.displayName)
                               .maybeProperty(
                                 'resolve',
                                 nullSafe: param.type.isNullable,
@@ -193,7 +193,7 @@ class StoryClassBuilder {
   }
 
   InvokeExpression instantiate(
-    Expression Function(ParameterElement) assigner,
+    Expression Function(FormalParameterElement) assigner,
   ) {
     return InvokeExpression.newOf(
       widgetType.getRef(),
@@ -203,10 +203,10 @@ class StoryClassBuilder {
           .toList(),
       params //
           .where((param) => param.isNamed)
-          .lastBy((param) => param.name)
+          .lastBy((param) => param.displayName)
           .map(
             (_, param) => MapEntry(
-              param.name,
+              param.displayName,
               assigner(param),
             ),
           ),

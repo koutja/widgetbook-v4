@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:path/path.dart' as p;
@@ -15,7 +15,7 @@ class ComponentBuilder {
 
   final DartType widgetType;
   final DartType argsType;
-  final List<TopLevelVariableElement> stories;
+  final List<TopLevelVariableElement2> stories;
   final String path;
 
   Code build() {
@@ -41,10 +41,10 @@ class ComponentBuilder {
                 'stories': literalList(
                   stories
                       .map(
-                        (story) => refer(story.name).property('init').call(
+                        (story) => refer(story.displayName).property('init').call(
                           [],
                           {
-                            'name': literalString(story.name.substring(1)),
+                            'name': literalString(story.displayName.substring(1)),
                           },
                         ),
                       )

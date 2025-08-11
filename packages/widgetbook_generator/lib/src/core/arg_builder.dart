@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:code_builder/code_builder.dart';
 
 import 'extensions.dart';
@@ -6,13 +6,13 @@ import 'extensions.dart';
 class ArgBuilder {
   ArgBuilder(this.param);
 
-  final ParameterElement param;
+  final FormalParameterElement param;
 
   Field buildField() {
     return Field(
       (b) => b
         ..modifier = FieldModifier.final$
-        ..name = param.name
+        ..name = param.displayName
         ..type = TypeReference(
           (b) => b
             ..symbol = 'Arg'
@@ -26,7 +26,7 @@ class ArgBuilder {
     return Parameter(
       (b) => b
         ..named = true
-        ..name = param.name
+        ..name = param.displayName
         ..type = TypeReference(
           (b) => b
             ..symbol = 'Arg'
@@ -60,7 +60,7 @@ class ArgBuilder {
     return Parameter(
       (b) => b
         ..named = true
-        ..name = param.name
+        ..name = param.displayName
         ..type = TypeReference(
           (b) => b
             ..symbol = param.type.nonNullableName
